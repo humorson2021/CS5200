@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Player create</title>
+    <%- include('./partials/css.ejs') %>
+  </head>
+  <body>
+    <div class="container">
+      <%- include("./partials/navBar.ejs") %>
+      <h1>Player create</h1>
+
+      <%- include("./partials/errMsg.ejs") %>
+
+
+
+      <form action="/players/create" method="POST">
+        <div class="mb-3">
+          <label class="form-label">
+            Player ID
+            <input
+              type="text"
+              name="player_id"
+              class="form-control"
+            />
+          </label>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">
+            Player Name
+            <input
+              type="text"
+              name="player_name"
+              class="form-control"
+            />
+          </label>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">
+            Team ID
+            <input
+              type="text"
+              name="team_id"
+              class="form-control"
+            />
+          </label>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">
+            Sexual
+            <input
+              type="text"
+              name="sex"
+              class="form-control"
+            />
+          </label>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">
+            Contact
+            <input
+              type="text"
+              name="contact"
+              class="form-control"
+            />
+          </label>
+        </div>
+
+        <div>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </div>
+      </form>
+
+      <%- include("./partials/footer.ejs") %>
+    </div>
+    <!-- /.container -->
+  </body>
+</html>

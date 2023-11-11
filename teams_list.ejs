@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Teams</title>
+    <%- include('./partials/css.ejs') %>
+  </head>
+  <body>
+    <div class="container">
+      <%- include("./partials/navBar.ejs") %>
+      <h1>Teams</h1>
+
+      <%- include("./partials/errMsg.ejs") %>
+
+        <% teams.forEach(function(team){ %>
+        <div class="col-4 mb-2">
+          <div class="card p-2">
+            <div class="card-title">
+              <label><a href="/teams/<%= team.team_id %>">Team ID: <output><%= team.team_id %></output></a> </label>
+            </div>
+            <div class="card-text">
+              <div>
+                <label
+                  >Team ID: <output><%= team.team_id %></output>
+                </label>
+              </div>
+              <div>
+                <label
+                  >Team Name: <output><%= team.team_name %></output>
+                </label>
+              </div>
+
+              <div>
+                <a
+                  type="button"
+                  class="btn btn-outline-primary btn-sm"
+                  href="/teams/<%= team.team_id %>/edit"
+                  >Edit</a
+                >
+              </div>
+            </div>
+            <!-- /.card-text -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col-4 -->
+
+        <% }); %>
+      </div>
+      <!-- /.row -->
+
+      <%- include("./partials/footer.ejs") %>
+    </div>
+    <!-- /.container -->
+  </body>
+</html>
