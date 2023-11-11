@@ -3,83 +3,81 @@ const { open } = require("sqlite");
 
 async function connect() {
   return open({
-    filename: "./db/bikeShare.sqlite3",
+    // filename: "./db/bikeShare.sqlite3",
+    // driver: sqlite3.Database,
+    filename: "./db/bridge.db",
     driver: sqlite3.Database,
   });
 }
 
-async function getTrips() {
+async function getPlayers() {
   const db = await connect();
   try {
-    const trips = await db.all(`SELECT ride_id, 
-      start_station_name, 
-      end_station_name, 
-      started_at, 
-      ended_at,
-      rideable_type
-    FROM  trips
-    ORDER BY ride_id DESC
+    const players = await db.all(`SELECT player_id, 
+      team_id, 
+      name, 
+      sex, 
+      contact
+    FROM  Players
+    ORDER BY player_id DESC
     LIMIT 20;
     `);
 
-    console.log("dbConnector got data", trips.length);
+    console.log("dbConnector got data", players.length);
 
-    return trips;
+    return players;
   } finally {
     await db.close();
   }
 }
 
-async function getTrip(ride_id) {
-  console.log("Get trip ride_id", ride_id);
+async function getPlayer(player_id) {
+  console.log("Get player player_id", player_id);
   const db = await connect();
   try {
-    const stmt = await db.prepare(`SELECT 
-    ride_id, 
-    start_station_name, 
-    end_station_name, 
-    started_at, 
-    ended_at,
-    rideable_type
-  FROM trips
+    const stmt = await db.prepare(`SELECT
+    player_id,
+    team_id, 
+    name, 
+    sex, 
+    contact
+  FROM  Players
   WHERE 
-    ride_id = :ride_id    
+    player_id = :player_id    
   `);
 
-    stmt.bind({ ":ride_id": ride_id });
+    stmt.bind({ ":player_id": player_id });
 
-    const trips = await stmt.all();
+    const player = await stmt.all();
 
     await stmt.finalize();
 
-    return trips;
+    return player;
   } finally {
     await db.close();
   }
 }
 
-async function updateTrip(ride_id, newRide) {
-  console.log("update trip ride_id", ride_id);
+async function updatePlayer(player_id, newPlayer) {
+  console.log("update player player_id", player_id);
   const db = await connect();
   try {
-    const stmt = await db.prepare(`UPDATE trips  
+    const stmt = await db.prepare(`UPDATE players  
     SET
-      start_station_name = :start_station_name,
-      end_station_name = :end_station_name, 
-      started_at = :started_at, 
-      ended_at = :ended_at,
-      rideable_type = :rideable_type
+      team_id = :team_id, 
+      name = :name, 
+      sex = :sex, 
+      contact = :contact
   WHERE 
-    ride_id = :ride_id    
+    player_id = :player_id    
   `);
 
     stmt.bind({
-      ":ride_id": ride_id,
-      ":end_station_name": newRide.end_station_name,
-      ":start_station_name": newRide.start_station_name,
-      ":started_at": newRide.started_at,
-      ":ended_at": newRide.ended_at,
-      ":rideable_type": newRide.rideable_type,
+      ":player_id": player_id,
+      ":team_id": newPlayer.team_id,
+      ":name": newPlayer.name,
+      ":sex": newPlayer.sex,
+      ":contact": newPlayer.contact,
     });
 
     const result = await stmt.run();
@@ -92,17 +90,17 @@ async function updateTrip(ride_id, newRide) {
   }
 }
 
-async function deleteTrip(ride_id) {
-  console.log("update trip ride_id", ride_id);
+async function deletePlayer(player_id) {
+  console.log("update player player_id", player_id);
   const db = await connect();
   try {
-    const stmt = await db.prepare(`DELETE FROM trips      
+    const stmt = await db.prepare(`DELETE FROM players      
   WHERE 
-    ride_id = :ride_id    
+    player_id = :player_id    
   `);
 
     stmt.bind({
-      ":ride_id": ride_id,
+      ":player_id": player_id,
     });
 
     const result = await stmt.run();
@@ -115,28 +113,26 @@ async function deleteTrip(ride_id) {
   }
 }
 
-async function createTrip( newRide) {
-  console.log("create trip newRide", newRide);
+async function createPlayer( newPlayer) {
+  console.log("create player newPlayer", newPlayer);
   const db = await connect();
   try {
-    const stmt = await db.prepare(`INSERT INTO trips 
-      (start_station_name, end_station_name, started_at, ended_at, rideable_type)
+    const stmt = await db.prepare(`INSERT INTO players 
+      (team_id, name, sex, contact)
     VALUES
       ( 
-        :start_station_name,
-        :end_station_name, 
-        :started_at, 
-        :ended_at,
-        :rideable_type
+        :team_id,
+        :name, 
+        :sex, 
+        :contact
       )
   `);
 
     stmt.bind({
-      ":end_station_name": newRide.end_station_name,
-      ":start_station_name": newRide.start_station_name,
-      ":started_at": newRide.started_at,
-      ":ended_at": newRide.ended_at,
-      ":rideable_type": newRide.rideable_type,
+      ":team_id": newPlayer.team_id,
+      ":name": newPlayer.name,
+      ":sex": newPlayer.sex,
+      ":contact": newPlayer.contact,
     });
 
     const result = await stmt.run();
@@ -149,74 +145,62 @@ async function createTrip( newRide) {
   }
 }
 
+async function getTeams() {
+  const db = await connect();
+  try {
+    const teams = await db.all(`SELECT team_id, 
+      team_name
+    FROM  Teams
+    ORDER BY team_id DESC
+    LIMIT 10;
+    `);
 
-// ******* COMMENTS *********
+    console.log("dbConnector got data", teams.length);
 
-async function getComment(comment_id) {
-  console.log("Get comment comment_id", comment_id);
+    return teams;
+  } finally {
+    await db.close();
+  }
+}
+
+async function getTeam(team_id) {
+  console.log("Get team team_id", team_id);
   const db = await connect();
   try {
     const stmt = await db.prepare(`SELECT 
-    ride_id,
-    comment_id,
-    comment 
-  FROM comments
+    team_id, 
+    team_name
+  FROM  Teams
   WHERE 
-    comment_id = :comment_id    
+    team_id = :team_id    
   `);
 
-    stmt.bind({ ":comment_id": comment_id });
+    stmt.bind({ ":team_id": team_id });
 
-    const comments = await stmt.all();
+    const teams = await stmt.all();
 
     await stmt.finalize();
 
-    return comments;
+    return teams;
   } finally {
     await db.close();
   }
 }
 
-async function getComments(ride_id) {
-  console.log("Get comments for ride_id", ride_id);
+async function updateTeam(team_id, newTeam) {
+  console.log("update team team_id", team_id);
   const db = await connect();
   try {
-    const stmt = await db.prepare(`SELECT 
-    ride_id,
-    comment_id,
-    comment 
-  FROM comments
+    const stmt = await db.prepare(`UPDATE Teams  
+    SET 
+      team_name = :team_name
   WHERE 
-    ride_id = :ride_id    
-  `);
-
-    stmt.bind({ ":ride_id": ride_id });
-
-    const comments = await stmt.all();
-
-    await stmt.finalize();
-
-    return comments;
-  } finally {
-    await db.close();
-  }
-}
-
-// Update one comment
-async function updateComment(comment_id, newComment) {
-  console.log("update comment comment_id", comment_id);
-  const db = await connect();
-  try {
-    const stmt = await db.prepare(`UPDATE comments  
-    SET
-      comment = :comment
-  WHERE 
-    comment_id = :comment_id    
+    team_id = :team_id    
   `);
 
     stmt.bind({
-      ":comment_id": comment_id,
-      ":comment": newComment.comment,
+      ":team_id": team_id,
+      ":team_name": newTeam.team_name,
     });
 
     const result = await stmt.run();
@@ -228,70 +212,14 @@ async function updateComment(comment_id, newComment) {
     await db.close();
   }
 }
-
-// Delete one comment
-async function deleteComment(comment_id) {
-  console.log("Delete comment comment_id", comment_id);
-  const db = await connect();
-  try {
-    const stmt = await db.prepare(`DELETE FROM comments  
-  WHERE 
-    comment_id = :comment_id    
-  `);
-
-    stmt.bind({
-      ":comment_id": comment_id,
-    });
-
-    const result = await stmt.run();
-
-    await stmt.finalize();
-
-    return result;
-  } finally {
-    await db.close();
-  }
-}
-
-
-async function createComment( newComment) {
-  console.log("create comment newComment", newComment);
-  const db = await connect();
-  try {
-    const stmt = await db.prepare(`INSERT INTO comments 
-      (ride_id, comment)
-    VALUES
-      ( 
-        :ride_id,
-        :comment
-      )
-  `);
-
-    stmt.bind({
-      ":ride_id": newComment.ride_id,
-      ":comment": newComment.comment
-    });
-
-    const result = await stmt.run();
-
-    await stmt.finalize();
-
-    return result;
-  } finally {
-    await db.close();
-  }
-}
-
 
 module.exports = {
-  getTrips,
-  getTrip,
-  updateTrip,
-  deleteTrip,
-  createTrip,
-  getComments,
-  getComment,
-  updateComment,
-  deleteComment,
-  createComment
+  getPlayers,
+  getPlayer,
+  updatePlayer,
+  deletePlayer,
+  createPlayer,
+  getTeams,
+  getTeam,
+  updateTeam
 };

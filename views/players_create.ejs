@@ -1,77 +1,72 @@
 <!doctype html>
 <html>
   <head>
-    <title>Trip Edit</title>
+    <title>Player create</title>
     <%- include('./partials/css.ejs') %>
   </head>
   <body>
     <div class="container">
       <%- include("./partials/navBar.ejs") %>
-      <h1>Trip Edit <%= trip?.ride_id %></h1>
+      <h1>Player create</h1>
 
       <%- include("./partials/errMsg.ejs") %>
 
-      <div>Trip edit here</div>
 
-      <form action="/trips/<%= trip?.ride_id %>/edit" method="POST">
+
+      <form action="/players/create" method="POST">
         <div class="mb-3">
           <label class="form-label">
-            Start Station Name
+            Player ID
             <input
               type="text"
-              value="<%= trip.start_station_name %>"
-              name="start_station_name"
+              name="player_id"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            End Station Name
+            Player Name
             <input
               type="text"
-              value="<%= trip.end_station_name %>"
-              name="end_station_name"
+              name="player_name"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            Started at
+            Team ID
             <input
               type="text"
-              value="<%= trip.started_at %>"
-              name="started_at"
+              name="team_id"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            Ended at
+            Sexual
             <input
               type="text"
-              value="<%= trip.ended_at %>"
-              name="ended_at"
+              name="sex"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            Type of Ride
+            Contact
             <input
               type="text"
-              value="<%= trip.rideable_type %>"
-              name="rideable_type"
+              name="contact"
               class="form-control"
             />
           </label>
         </div>
 
         <div>
-          <button type="submit" class="btn btn-primary">Edit</button>
+          <button type="submit" class="btn btn-primary">Create</button>
         </div>
       </form>
 

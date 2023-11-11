@@ -1,72 +1,67 @@
 <!doctype html>
 <html>
   <head>
-    <title>Trip Edit</title>
+    <title>Player Edit</title>
     <%- include('./partials/css.ejs') %>
   </head>
   <body>
     <div class="container">
       <%- include("./partials/navBar.ejs") %>
-      <h1>Create Trip</h1>
+      <h1>Player Edit <%= player?.player_id %></h1>
 
       <%- include("./partials/errMsg.ejs") %>
 
+      <div>Player edit here</div>
 
-
-      <form action="/trips/create" method="POST">
+      <form action="/players/<%= player.player_id %>/edit" method="POST">
+        <input type="hidden" name="player_id" value="<%= player.player_id %>">
         <div class="mb-3">
           <label class="form-label">
-            Start Station Name
+            Player Name
             <input
               type="text"
-              name="start_station_name"
+              value="<%= player.name %>"
+              name="name"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            End Station Name
+            Team ID
             <input
               type="text"
-              name="end_station_name"
+              value="<%= player.team_id %>"
+              name="team_id"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            Started at
+            Sexual
             <input
               type="text"
-              name="started_at"
+              value="<%= player.sex %>"
+              name="sex"
               class="form-control"
             />
           </label>
         </div>
         <div class="mb-3">
           <label class="form-label">
-            Ended at
+            Contact
             <input
               type="text"
-              name="ended_at"
-              class="form-control"
-            />
-          </label>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">
-            Type of Ride
-            <input
-              type="text"
-              name="rideable_type"
+              value="<%= player.contact %>"
+              name="contact"
               class="form-control"
             />
           </label>
         </div>
 
         <div>
-          <button type="submit" class="btn btn-primary">Create</button>
+          <button type="submit" class="btn btn-primary">Edit</button>
         </div>
       </form>
 
