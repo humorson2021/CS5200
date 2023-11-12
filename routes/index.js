@@ -113,13 +113,16 @@ router.get("/players/:player_id", async function (req, res) {
     console.log(
       "players edit found player",
       sqlRes,
+      "team id is",
+      sqlRes[0].team_id
     );
 
     if (sqlRes.length === 1) {
       const team = await getTeam(sqlRes[0].team_id);
+      console.log("team now is ", team[0]);
       res.render("players_details", {
         player: sqlRes[0],
-        team: team,
+        team: team[0],
         err: msg,
         type: "success",
       });
@@ -292,89 +295,5 @@ router.post("/teams/:team_id/edit", async function (req, res) {
     });
   }
 });
-
-// // ********  Comments routes ********
-
-// // Update the comment from the trips_details view, returns to trips_details
-// router.post("/comments/:comment_id/edit", async function (req, res) {
-//   console.log("Edit comment route", req.params.comment_id, req.body);
-
-//   const comment_id = req.params.comment_id;
-//   const newComment = req.body;
-
-//   try {
-//     const sqlResUpdate = await updateComment(comment_id, newComment);
-//     console.log("Updating comment", sqlResUpdate);
-
-//     const editedComment = (await getComment(comment_id))[0];
-
-//     console.log("Edited Comment", editedComment);
-
-//     if (sqlResUpdate.changes === 1) {
-//       res.redirect(`/trips/${editedComment.ride_id}/?msg=Comment modified`);
-//     } else {
-//       // More than one comment found
-//       res.redirect(`/trips/${editedComment.ride_id}/?msg=Error editing comment`);
-//     }
-//   } catch (exception) {
-//     console.log("Error exceuting sql", exception);
-//     res.render("trips_details", {
-//       trip: null,
-//       comments: [],
-//       err: "Error editing the comment " + exception,
-//       type: "danger",
-//     });
-//   }
-// });
-
-// // Update the comment from the trips_details view, returns to trips_details
-// router.get("/comments/:comment_id/delete", async function (req, res) {
-//   console.log("Delete comment route", req.params.comment_id);
-
-//   const comment_id = req.params.comment_id;
-
-//   try {
-//     // Get the comment before we delete it to get the ride_id
-//     const sqlResFindComment = await getComment(req.params.comment_id);
-//     const oldComment = sqlResFindComment[0];
-
-//     const sqlResUpdate = await deleteComment(comment_id);
-//     console.log("Deleting comment", sqlResUpdate);
-
-//     if (sqlResUpdate.changes === 1) {
-//       res.redirect(`/trips/${oldComment.ride_id}/?msg=Comment deleted`);
-//     } else {
-//       res.redirect(`/trips/${oldComment.ride_id}/?msg=Error deleting comment`);
-//     }
-//   } catch (exception) {
-//     console.log("Error exceuting sql", exception);
-//     res.render("trips_details", {
-//       trip: null,
-//       comments: [],
-//       err: "Error deleting the comment " + exception,
-//       type: "danger",
-//     });
-//   }
-// });
-
-// // Create a comment from the trips_detail view. Content comes in the body, including the ride_id
-// router.post("/comments/create", async function (req, res) {
-//   console.log("Create comments route", req.body);
-
-//   const newComment = req.body;
-
-//   try {
-//     const sqlResCreate = await createComment(newComment);
-//     console.log("creating comment result", sqlResCreate);
-
-//     res.redirect(`/trips/${newComment.ride_id}/?msg=Comment inserted`);
-//   } catch (exception) {
-//     console.log("Error exceuting sql", exception);
-//     res.render("trips_create", {
-//       err: "Error inserting the ride " + exception,
-//       type: "danger",
-//     });
-//   }
-// });
 
 module.exports = router;
